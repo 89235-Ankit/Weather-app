@@ -5,6 +5,37 @@
   padding-inline: 16px;
 }
 
+.metric {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.aqi-good { color: #2ecc71; }
+.aqi-moderate { color: #f1c40f; }
+.aqi-sensitive { color: #e67e22; }
+.aqi-unhealthy { color: #e74c3c; }
+.aqi-very-unhealthy { color: #8e44ad; }
+.aqi-hazardous { color: #2c2c2c; }
+
+
+.metric .label {
+  font-size: 0.8rem;
+  opacity: 0.7;
+  text-transform: uppercase;
+}
+
+.metric .value {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+/* UV colors */
+.uv-low { color: #2ecc71; }
+.uv-moderate { color: #f1c40f; }
+.uv-high { color: #e67e22; }
+.uv-very-high { color: #e74c3c; }
+
+
 /* Full-screen background image container (use with inline style or a class that sets background-image) */
 
 .image {
@@ -160,4 +191,114 @@ button:disabled {
 /* If using Bootstrap together, add spacing utilities harmony */
 .container.py-4 .input-group {
   gap: 8px; /* small gap between input and button */
+}
+
+.weather-card {
+  color: #fff;
+  transition: background 0.5s ease;
+}
+
+/* Sunny */
+.weather-sunny {
+  background: linear-gradient(135deg, #f6d365, #fda085);
+}
+
+/* Cloudy */
+.weather-cloudy {
+  background: linear-gradient(135deg, #bdc3c7, #2c3e50);
+}
+
+/* Rainy */
+.weather-rainy {
+  background: linear-gradient(135deg, #4b79a1, #283e51);
+}
+
+/* Storm */
+.weather-storm {
+  background: linear-gradient(135deg, #232526, #414345);
+}
+
+/* Snow */
+.weather-snow {
+  background: linear-gradient(135deg, #e6dada, #274046);
+}
+
+/* Fallback */
+.weather-default {
+  background: #6c757d;
+}
+
+.weather-animation {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.weather-animation.rain::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(
+      -20deg,
+      rgba(255,255,255,0.2),
+      rgba(255,255,255,0.2) 1px,
+      transparent 1px,
+      transparent 12px
+    );
+  animation: rain-fall 0.5s linear infinite;
+}
+
+@keyframes rain-fall {
+  from { background-position: 0 0; }
+  to   { background-position: -40px 100px; }
+}
+
+.weather-animation.snow::before,
+.weather-animation.snow::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle, rgba(255,255,255,0.8) 2px, transparent 3px);
+  background-size: 50px 50px;
+  animation: snow-fall 10s linear infinite;
+}
+
+.weather-animation.snow::after {
+  background-size: 80px 80px;
+  opacity: 0.5;
+  animation-duration: 15s;
+}
+
+@keyframes snow-fall {
+  from { background-position: 0 -100px; }
+  to   { background-position: 0 100vh; }
+}
+
+.weather-night {
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  color: #eaeaea;
+}
+
+.weather-night::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(1px 1px at 20% 30%, rgba(255,255,255,.8), transparent),
+    radial-gradient(1px 1px at 80% 40%, rgba(255,255,255,.6), transparent),
+    radial-gradient(1px 1px at 50% 70%, rgba(255,255,255,.7), transparent),
+    radial-gradient(1px 1px at 10% 80%, rgba(255,255,255,.5), transparent);
+  z-index: 1;
+}
+
+.weather-card .card-body {
+  position: relative;
+  z-index: 2;
+}
+
+.weather-night .weather-animation {
+  opacity: 0.4;
 }

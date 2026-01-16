@@ -1,4 +1,3 @@
-
 <nav class="navbar navbar-dark bg-dark">
   <div class="container">
     <span class="navbar-brand mb-0 h1">Weather App</span>
@@ -10,14 +9,8 @@
     <div class="row justify-content-center">
       <div class="col-12 col-md-8 col-lg-6">
         <div class="input-group mb-3">
-          <input
-            name="city"
-            [(ngModel)]="city"
-            type="text"
-            class="form-control"
-            placeholder="Enter location"
-            required
-          />
+          <input name="city" [(ngModel)]="city" type="text" class="form-control" placeholder="Enter location"
+            required />
           <button class="btn btn-primary" type="submit" [disabled]="f.invalid || loading()">
             Search
           </button>
@@ -32,44 +25,106 @@
       <div *ngIf="error() as e" class="alert alert-danger">{{ e }}</div>
 
       <!-- Call the signal and alias its VALUE -->
-      <div *ngIf="data() as d" class="card shadow-sm">
-        <div class="card-body">
-          <div class="d-flex justify-content-between align-items-center mb-2">
-            <h5 class="card-title mb-0">
-              {{ d.location.name }}, {{ d.location.country }}
-            </h5>
-            <span class="badge text-bg-secondary">{{ d.location.localtime }}</span>
+      <div *ngIf="data() as d" class="card shadow-sm position-relative overflow-hidden"
+        [ngClass]="getWeatherClass(d.current.condition.text, d.location.localtime)">
+        <div class="weather-animation" [ngClass]="getWeatherAnimation(d.current.condition.text)">
+        </div>
+        <div class="card-body position-relative">
+          <!-- HEADER -->
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+              <h4 class="mb-0">
+                {{ d.location.name }}, {{ d.location.country }}
+              </h4>
+              <small class="opacity-75">
+                {{ d.location.localtime }}
+              </small>
+            </div>
+
+            <img [src]="d.current.condition.icon" [alt]="d.current.condition.text" width="64" height="64" />
           </div>
 
-          <div class="row align-items-center">
-            <div class="col-auto">
-              <img
-                [src]="d.current.condition.icon"
-                [alt]="d.current.condition.text"
-                class="img-fluid"
-                style="width:48px;height:48px"
-              />
+          <!-- MAIN TEMP -->
+          <div class="text-center my-3">
+            <div class="display-3 fw-bold">
+              {{ d.current.temp_c }}°
             </div>
-            <div class="col">
-              <div class="display-6 fw-bold">
-                {{ d.current.temp_c }}°
-                <small class="text-muted fs-6">C</small>
+            <div class="fs-5">
+              {{ d.current.condition.text }}
+            </div>
+            <small class="opacity-75">
+              Feels like {{ d.current.feelslike_c }}°
+            </small>
+          </div>
+
+          <hr />
+
+          <!-- METRICS GRID -->
+          <div class="row text-center g-3">
+            <div class="col-6 col-md-3">
+              <div class="metric">
+                <span class="label">Wind</span>
+                <span class="value">
+                  {{ d.current.wind_kph }} km/h
+                </span>
+                <small>{{ d.current.wind_dir }}</small>
               </div>
-              <div class="text-muted">
-                {{ d.current.condition.text }}
+            </div>
+
+            <div class="col-6 col-md-3">
+              <div class="metric">
+                <span class="label">Humidity</span>
+                <span class="value">
+                  {{ d.current.humidity }}%
+                </span>
               </div>
+            </div>
+
+            <div class="col-6 col-md-3">
+              <div class="metric">
+                <span class="label">UV Index</span>
+                <span class="value" [ngClass]="getUvClass(d.current.uv)">
+                  {{ d.current.uv }}
+                </span>
+              </div>
+            </div>
+
+            <div class="col-6 col-md-3">
+              <div class="metric">
+                <span class="label">Visibility</span>
+                <span class="value">
+                  {{ d.current.vis_km }} km
+                </span>
+              </div>            
+            </div>
+            
+               <div *ngIf="d.current.air_quality as aqi" class="metric">
+              <span class="label">Air Quality</span>
+              <span class="value" [ngClass]="getAqiClass(aqi['us-epa-index'])">
+                {{ getAqiLabel(aqi['us-epa-index']) }}
+              </span>
             </div>
           </div>
 
           <hr />
 
-          <div class="row text-center g-3">
-            <div class="col-6 col-md-3">
-              <div class="fw-semibold">Humidity</div>
-              <div>{{ d.current.humidity }}%</div>
+          <!-- SUN -->
+          <div class="row text-center">
+            <div class="col-6">
+              <div class="metric">
+                <span class="label">Sunrise</span>
+                <span class="value">
+                  {{ d.forecast.forecastday[0].astro.sunrise }}
+                </span>
+              </div>
             </div>
-            <div class="col-6 col-md-3">
-              <div class="fw-semibold">Wind</div>
-              <div>{{ d.current.wind_kph }} km/h</div>
+
+            <div class="col-6">
+              <div class="metric">
+                <span class="label">Sunset</span>
+                <span class="value">
+                  {{ d.forecast.forecastday[0].astro.sunset }}
+                </span>
+              </div>
             </div>
-            <div class="col-6 col-md-3">
+          </div>
